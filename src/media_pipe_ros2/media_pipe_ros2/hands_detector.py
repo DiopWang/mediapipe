@@ -8,6 +8,8 @@ import math
 import numpy as np
 from rclpy.node import Node
 from media_pipe_ros2_msg.msg import HandPoint,MediaPipeHumanHand,MediaPipeHumanHandList
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge
 
 
 mp_drawing = mp.solutions.drawing_utils     # 绘制手部关键点
@@ -58,6 +60,9 @@ class HandsPublisher(Node):
     def __init__(self):
         super().__init__('mediapipe_publisher')
         self.publisher_ = self.create_publisher(MediaPipeHumanHandList, '/mediapipe/human_hand_list', 10)
+        # 添加图像发布器
+        self.image_publisher_ = self.create_publisher(Image, '/mediapipe/hands_image', 10)
+        self.bridge = CvBridge()
     
     
         # 这个方法用来计算两个二维向量之间的角度
@@ -305,7 +310,15 @@ class HandsPublisher(Node):
 
                 
 
-                cv2.imshow('MediaPipe Hands', image)
+                # cv2.imshow('MediaPipe Hands', image)
+                
+                # 发布处理后的图像
+                try:
+                    img_msg = self.bridge.cv2_to_imgmsg(image, 'bgr8')
+                    self.image_publisher_.publish(img_msg)
+                except Exception as e:
+                    print(f"发布图像时出错: {e}")
+                
                 # 添加多种退出方式
                 key = cv2.waitKey(1) & 0xFF
                 if key == ord('q') or key == ord('Q'):  # Q键退出

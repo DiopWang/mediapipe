@@ -8,6 +8,8 @@ import mediapipe as mp
 from rclpy.node import Node
 from media_pipe_ros2_msg.msg import  MediaPipeHumanPoseList                            
 from mediapipe.python.solutions.pose import PoseLandmark
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge
 
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
@@ -56,6 +58,9 @@ class PosePublisher(Node):
     def __init__(self):
         super().__init__('mediapipe_pose_publisher')
         self.publisher_ = self.create_publisher(MediaPipeHumanPoseList, '/mediapipe/human_pose_list', 10)
+        # 添加图像发布器
+        self.image_publisher_ = self.create_publisher(Image, '/mediapipe/pose_image', 10)
+        self.bridge = CvBridge()
     
     
     #     def vector_2d_angle(self, v1, v2):  
@@ -203,7 +208,6 @@ class PosePublisher(Node):
                 if results.pose_landmarks != None:
                     index_pose = 0
                     for pose_landmarks in (results.pose_landmarks.landmark):
-                        print(index_pose)
                         mediapipehumanposelist.human_pose_list[index_pose].name = str(NAME_POSE[index_pose])
                         mediapipehumanposelist.human_pose_list[index_pose].x = pose_landmarks.x
                         mediapipehumanposelist.human_pose_list[index_pose].y = pose_landmarks.y
@@ -226,7 +230,15 @@ class PosePublisher(Node):
                     mediapipehumanposelist.num_humans = 1
                     self.publisher_.publish(mediapipehumanposelist)
 
-                cv2.imshow('MediaPipe Pose', image)
+                # cv2.imshow('MediaPipe Pose', image)
+                
+                # 发布处理后的图像
+                try:
+                    img_msg = self.bridge.cv2_to_imgmsg(image, 'bgr8')
+                    self.image_publisher_.publish(img_msg)
+                except Exception as e:
+                    print(f"发布图像时出错: {e}")
+                
                 if cv2.waitKey(5) & 0xFF == 27:
                     break        
 
