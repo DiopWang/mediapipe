@@ -24,6 +24,7 @@ setup(
             'pose_detector = media_pipe_ros2.pose_detector:main',
             'face_mesh_detector = media_pipe_ros2.face_mesh_detector:main',
             'holistic_detector = media_pipe_ros2.holistic_detector:main',
+            'test_camera_ros2 = media_pipe_ros2.test_camera_ros2:main',
         ],
     },
 )
