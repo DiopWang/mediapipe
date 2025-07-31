@@ -6,11 +6,11 @@ https://mediapipe.dev/
 
 Functionalities:
 - [ ] Face Detection
-- [x] Face Mesh
+- [ ] Face Mesh
 - [ ] Iris
 - [x] Hands
 - [x] Pose
-- [x] Holistic
+- [ ] Holistic
 - [ ] Selfie Segmentation
 - [ ] Hair Segmentation
 - [ ] Object Detection
@@ -40,7 +40,7 @@ Functionalities:
 ### Installation
 1. Clone this repository into your ROS2 workspace/src directory.
  ```
-  git clone https://github.com/dmartinelli1997/media_pipe_ros2
+  git clone https://github.com/DiopWang/mediapipe.git
   ``` 
 2. Run colcon_build from your ROS2 workspace directory.
 <!-- USAGE EXAMPLES -->
@@ -48,9 +48,7 @@ Functionalities:
 From another bash:
   ```sh
   source ros2_workspace/install/setup.bash
-  ros2 run media_ṕipe_ros2 hands_detector
+  ros2 run media_pipe_ros2 hands_detector
   ```
-<!-- CONTACT -->
-## Contact
 
-Dieisson Martinelli - dmartinelli1997@gmail.com
+
